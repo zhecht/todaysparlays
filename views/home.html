@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="/static/css/main.css" type="text/css" rel="stylesheet">
+        <link href="/static/css/weather.css" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <script type="text/javascript" src="/static/js/main.js"></script>
+    </head>
+
+    <body>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        
+        <div class="topSection">
+            <div id="sportsDiv">
+                <h3>Lines</h3>
+                <div class="btn-group" role="group">
+                    <a id="NCAAB" href="/?s=NCAAB&amp;sub={{sub}}" class="btn btn-default">NCAAB</a>
+                    <a id="NCAAF" href="/?s=NCAAF&amp;sub={{sub}}" class="btn btn-default">NCAAF</a>
+                    <a id="NBA" href="/?s=NBA&amp;sub={{sub}}" class="btn btn-default">NBA</a>
+                    <a id="NFL" href="/?s=NFL&amp;sub={{sub}}" class="btn btn-default">NFL</a>
+                </div>
+                <script>
+                    $('#{{sport}}').addClass("active");
+                </script>   
+            </div>
+        </div>
+        <div class="bottomSection">
+            <div id="teamsDiv">
+                <table class="table">
+                    <thead>
+                       <tr>
+                          <th>Teams</th>
+                          <th>Time</th>
+                          <th>Public %</th>
+                          <th>W-L</th>
+                          {% if sport == "NBA" %}
+                            <th>Last 10</th>
+                          {% endif %}
+                          <th>Spread</th>
+                          {% if sport != "NFL" %}
+                            <th>Streak</th>
+                          {% endif %}
+                          <th>Under/Over</th>
+                          {% if sport == "NBA" or sport == "NFL" %}
+                            <th>PF</th>
+                            <th>PA</th>
+                          {% else %}
+                            
+                          {% endif %}
+                          <th>Link</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                       {% for game in games %}
+                          <tr class="game{{game.index}}">
+                            <td>{{game.away}}</td>
+                            <td>{{game.date}}</td>
+                            <td>{{game.percent_away}}</td>
+                            <td>{{game.record_away}}</td>
+                            {% if sport == "NBA" %}
+                                <td>{{game.away_L10}}</td>
+                            {% endif %}
+                            <td>{{game.spread_away}}</td>
+
+                            {% if sport != "NFL" %}
+                                <td>{{game.streak_away}}</td>
+                            {% endif %}
+
+                            <td>Under {{game.total}} ({{game.adjust_under}})</td>
+                            
+                            {% if sport == "NBA" or sport == "NFL" %}
+                                <td>{{game.away_PF}}</td>
+                                <td>{{game.away_PA}}</td>
+                            {% else %}
+                                
+                            {% endif %}
+                            <td><a href="{{game.link}}">Matchup</a></td>
+                          </tr>
+                          <tr class="game{{game.index}}">
+                            <td>{{game.home}}</td>
+                            <td>{{game.date}}</td>
+                            <td>{{game.percent_home}}</td>
+                            <td>{{game.record_home}}</td>
+                            {% if sport == "NBA" %}
+                                <td>{{game.home_L10}}</td>
+                            {% endif %}
+                            <td>{{game.spread_home}}</td>
+
+                            {% if sport != "NFL" %}
+                                <td>{{game.streak_home}}</td>
+                            {% endif %}
+                            <td>Over {{game.total}} ({{game.adjust_over}})</td>
+                            {% if sport == "NBA" or sport == "NFL" %}
+                                <td>{{game.home_PF}}</td>
+                                <td>{{game.home_PA}}</td>
+                            {% else %}
+                                
+                            {% endif %}
+                            <td><a href="{{game.link}}">Matchup</a></td>
+                          </tr>
+                          <script>
+                            //alert("{{game.index}}");
+                            if ("{{game.index}}" % 2 === 0) {
+                                $('.game{{game.index}}').css("background", "#ffcb05");
+                            } else {
+                                $('.game{{game.index}}').css("background", "white");
+                            }
+                          </script>
+                       {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </body>
+
+</html>
